@@ -16,13 +16,12 @@
 
 package com.hazelcast.hibernate.serialization;
 
+import com.hazelcast.internal.memory.MemoryAccessor;
+import com.hazelcast.internal.serialization.impl.SerializationConstants;
 import com.hazelcast.nio.ObjectDataInput;
 import com.hazelcast.nio.ObjectDataOutput;
-import com.hazelcast.nio.UnsafeHelper;
-import com.hazelcast.internal.serialization.impl.SerializationConstants;
 import com.hazelcast.nio.serialization.StreamSerializer;
 import org.hibernate.cache.spi.entry.CacheEntry;
-import sun.misc.Unsafe;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -35,7 +34,8 @@ import java.lang.reflect.Field;
 class Hibernate41CacheEntrySerializer
         implements StreamSerializer<CacheEntry> {
 
-    private static final Unsafe UNSAFE = UnsafeHelper.UNSAFE;
+    private static final MemoryAccessor MEM = MemoryAccessor.MEM;
+
 
     private static final long DISASSEMBLED_STATE_OFFSET;
     private static final long SUBCLASS_OFFSET;
@@ -49,16 +49,16 @@ class Hibernate41CacheEntrySerializer
         try {
             Class<CacheEntry> cacheEntryClass = CacheEntry.class;
             Field disassembledState = cacheEntryClass.getDeclaredField("disassembledState");
-            DISASSEMBLED_STATE_OFFSET = UNSAFE.objectFieldOffset(disassembledState);
+            DISASSEMBLED_STATE_OFFSET = MEM.objectFieldOffset(disassembledState);
 
             Field subclass = cacheEntryClass.getDeclaredField("subclass");
-            SUBCLASS_OFFSET = UNSAFE.objectFieldOffset(subclass);
+            SUBCLASS_OFFSET = MEM.objectFieldOffset(subclass);
 
             Field lazyPropertiesAreUnfetched = cacheEntryClass.getDeclaredField("lazyPropertiesAreUnfetched");
-            LAZY_PROPERTIES_ARE_UNFETCHED = UNSAFE.objectFieldOffset(lazyPropertiesAreUnfetched);
+            LAZY_PROPERTIES_ARE_UNFETCHED = MEM.objectFieldOffset(lazyPropertiesAreUnfetched);
 
             Field version = cacheEntryClass.getDeclaredField("version");
-            VERSION_OFFSET = UNSAFE.objectFieldOffset(version);
+            VERSION_OFFSET = MEM.objectFieldOffset(version);
 
             CACHE_ENTRY_CONSTRUCTOR = cacheEntryClass.getDeclaredConstructor(CONSTRUCTOR_ARG_TYPES);
             CACHE_ENTRY_CONSTRUCTOR.setAccessible(true);
@@ -72,10 +72,10 @@ class Hibernate41CacheEntrySerializer
             throws IOException {
 
         try {
-            Serializable[] disassembledState = (Serializable[]) UNSAFE.getObject(object, DISASSEMBLED_STATE_OFFSET);
-            String subclass = (String) UNSAFE.getObject(object, SUBCLASS_OFFSET);
-            boolean lazyPropertiesAreUnfetched = UNSAFE.getBoolean(object, LAZY_PROPERTIES_ARE_UNFETCHED);
-            Object version = UNSAFE.getObject(object, VERSION_OFFSET);
+            Serializable[] disassembledState = (Serializable[]) MEM.getObject(object, DISASSEMBLED_STATE_OFFSET);
+            String subclass = (String) MEM.getObject(object, SUBCLASS_OFFSET);
+            boolean lazyPropertiesAreUnfetched = MEM.getBoolean(object, LAZY_PROPERTIES_ARE_UNFETCHED);
+            Object version = MEM.getObject(object, VERSION_OFFSET);
 
             out.writeInt(disassembledState.length);
             for (Serializable state : disassembledState) {

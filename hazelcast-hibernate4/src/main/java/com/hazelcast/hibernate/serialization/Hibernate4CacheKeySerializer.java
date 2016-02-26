@@ -16,6 +16,7 @@
 
 package com.hazelcast.hibernate.serialization;
 
+import com.hazelcast.internal.memory.MemoryAccessor;
 import com.hazelcast.nio.ObjectDataInput;
 import com.hazelcast.nio.ObjectDataOutput;
 import com.hazelcast.nio.UnsafeHelper;
@@ -35,6 +36,7 @@ class Hibernate4CacheKeySerializer
         implements StreamSerializer<CacheKey> {
 
     private static final Unsafe UNSAFE = UnsafeHelper.UNSAFE;
+    private static final MemoryAccessor MEM = MemoryAccessor.MEM;
 
     private static final long KEY_OFFSET;
     private static final long TYPE_OFFSET;
@@ -46,19 +48,19 @@ class Hibernate4CacheKeySerializer
         try {
             Class<CacheKey> cacheKeyClass = CacheKey.class;
             Field key = cacheKeyClass.getDeclaredField("key");
-            KEY_OFFSET = UNSAFE.objectFieldOffset(key);
+            KEY_OFFSET = MEM.objectFieldOffset(key);
 
             Field type = cacheKeyClass.getDeclaredField("type");
-            TYPE_OFFSET = UNSAFE.objectFieldOffset(type);
+            TYPE_OFFSET = MEM.objectFieldOffset(type);
 
             Field entityOrRoleName = cacheKeyClass.getDeclaredField("entityOrRoleName");
-            ENTITY_OR_ROLE_NAME_OFFSET = UNSAFE.objectFieldOffset(entityOrRoleName);
+            ENTITY_OR_ROLE_NAME_OFFSET = MEM.objectFieldOffset(entityOrRoleName);
 
             Field tenantId = cacheKeyClass.getDeclaredField("tenantId");
-            TENANT_ID_OFFSET = UNSAFE.objectFieldOffset(tenantId);
+            TENANT_ID_OFFSET = MEM.objectFieldOffset(tenantId);
 
             Field hashCode = cacheKeyClass.getDeclaredField("hashCode");
-            HASH_CODE_OFFSET = UNSAFE.objectFieldOffset(hashCode);
+            HASH_CODE_OFFSET = MEM.objectFieldOffset(hashCode);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -69,11 +71,11 @@ class Hibernate4CacheKeySerializer
             throws IOException {
 
         try {
-            Object key = UNSAFE.getObject(object, KEY_OFFSET);
-            Type type = (Type) UNSAFE.getObject(object, TYPE_OFFSET);
-            String entityOrRoleName = (String) UNSAFE.getObject(object, ENTITY_OR_ROLE_NAME_OFFSET);
-            String tenantId = (String) UNSAFE.getObject(object, TENANT_ID_OFFSET);
-            int hashCode = UNSAFE.getInt(object, HASH_CODE_OFFSET);
+            Object key = MEM.getObject(object, KEY_OFFSET);
+            Type type = (Type) MEM.getObject(object, TYPE_OFFSET);
+            String entityOrRoleName = (String) MEM.getObject(object, ENTITY_OR_ROLE_NAME_OFFSET);
+            String tenantId = (String) MEM.getObject(object, TENANT_ID_OFFSET);
+            int hashCode = MEM.getInt(object, HASH_CODE_OFFSET);
 
             out.writeObject(key);
             out.writeObject(type);
@@ -101,11 +103,11 @@ class Hibernate4CacheKeySerializer
             int hashCode = in.readInt();
 
             CacheKey cacheKey = (CacheKey) UNSAFE.allocateInstance(CacheKey.class);
-            UNSAFE.putObjectVolatile(cacheKey, KEY_OFFSET, key);
-            UNSAFE.putObjectVolatile(cacheKey, TYPE_OFFSET, type);
-            UNSAFE.putObjectVolatile(cacheKey, ENTITY_OR_ROLE_NAME_OFFSET, entityOrRoleName);
-            UNSAFE.putObjectVolatile(cacheKey, TENANT_ID_OFFSET, tenantId);
-            UNSAFE.putIntVolatile(cacheKey, HASH_CODE_OFFSET, hashCode);
+            MEM.putObjectVolatile(cacheKey, KEY_OFFSET, key);
+            MEM.putObjectVolatile(cacheKey, TYPE_OFFSET, type);
+            MEM.putObjectVolatile(cacheKey, ENTITY_OR_ROLE_NAME_OFFSET, entityOrRoleName);
+            MEM.putObjectVolatile(cacheKey, TENANT_ID_OFFSET, tenantId);
+            MEM.putIntVolatile(cacheKey, HASH_CODE_OFFSET, hashCode);
             return cacheKey;
 
         } catch (Exception e) {
