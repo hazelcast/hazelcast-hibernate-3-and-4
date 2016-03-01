@@ -40,7 +40,7 @@
         <maven.build.timestamp.format>yyyyMMdd</maven.build.timestamp.format>
         <timestamp>${maven.build.timestamp}</timestamp>
 
-        <hazelcast.version>3.6</hazelcast.version>
+        <hazelcast.version>3.7-SNAPSHOT</hazelcast.version>
 
         <!-- Not using 3.1 at the moment since it recompiles all classes every time -->
         <!-- https://jira.codehaus.org/browse/MCOMPILER-205 -->
@@ -87,7 +87,6 @@
 
         <hsqldb.version>2.2.9</hsqldb.version>
         <javaassist.version>3.12.1.GA</javaassist.version>
-        <hazelcast.version>3.6</hazelcast.version>
     </properties>
 
     <licenses>
