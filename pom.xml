@@ -29,6 +29,7 @@
     <modules>
         <module>hazelcast-hibernate3</module>
         <module>hazelcast-hibernate4</module>
+        <module>hazelcast-hibernate5</module>
     </modules>
 
     <properties>
@@ -83,11 +84,9 @@
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
         <sonar.language>java</sonar.language>
         <sonar.verbose>true</sonar.verbose>
-        <!-- needed for checkstyle/findbugs -->
 
         <hsqldb.version>2.2.9</hsqldb.version>
-        <javaassist.version>3.12.1.GA</javaassist.version>
-        <hazelcast.version>3.6</hazelcast.version>
+        <javassist.version>3.18.1-GA</javassist.version>
     </properties>
 
     <licenses>
@@ -328,9 +327,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>javassist</groupId>
+            <groupId>org.javassist</groupId>
             <artifactId>javassist</artifactId>
-            <version>${javaassist.version}</version>
+            <version>${javassist.version}</version>
             <type>jar</type>
             <scope>test</scope>
         </dependency>
