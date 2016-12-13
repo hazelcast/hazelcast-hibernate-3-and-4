@@ -345,7 +345,7 @@ public class LocalRegionCache implements RegionCache {
         return Long.toString(markerIdCounter.getAndIncrement());
     }
 
-    private long nextTimestamp() {
+    protected long nextTimestamp() {
         return hazelcastInstance == null ? Clock.currentTimeMillis()
                 : HazelcastTimestamper.nextTimestamp(hazelcastInstance);
     }
