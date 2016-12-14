@@ -32,8 +32,8 @@ public class TimestampsRegionCache extends LocalRegionCache implements RegionCac
 
     @Override
     public boolean put(Object key, Object value, long txTimestamp, Object version) {
-        // use the value in txTimestamp as the timestamp instead of the value, since 
-        // hibernate pre-invalidates with a large value, and then invalidates with 
+        // use the value in txTimestamp as the timestamp instead of the value, since
+        // hibernate pre-invalidates with a large value, and then invalidates with
         //the actual time, which can cause queries to not be cached.
         boolean succeed = super.put(key, value, txTimestamp, version);
         if (succeed) {
