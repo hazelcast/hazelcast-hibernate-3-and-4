@@ -12,7 +12,8 @@
   ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
-  --><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <name>hazelcast-hibernate</name>
@@ -26,6 +27,8 @@
     <modules>
         <module>hazelcast-hibernate3</module>
         <module>hazelcast-hibernate4</module>
+        <module>hazelcast-hibernate5</module>
+        <module>hazelcast-hibernate52</module>
     </modules>
 
     <properties>
@@ -63,6 +66,8 @@
         <maven.sonar.plugin.version>3.3.0.603</maven.sonar.plugin.version>
         <maven.jacoco.plugin.version>0.7.9</maven.jacoco.plugin.version>
         <maven.cobertura.plugin.version>2.0</maven.cobertura.plugin.version>
+        <maven.resources.plugin.version>3.0.1</maven.resources.plugin.version>
+        <build.helper.maven.plugin.version>1.9.1</build.helper.maven.plugin.version>
 
         <log4j.version>1.2.12</log4j.version>
         <log4j2.version>2.0.1</log4j2.version>
@@ -533,6 +538,7 @@
                                 *.nio.ascii:*.nio.ssl:*.nio.tcp:*.partition.client:*.transaction.client:
                                 *.core.server:com.hazelcast.instance:com.hazelcast.PlaceHolder
                             </excludePackageNames>
+                            <additionalparam>-Xdoclint:none</additionalparam>
                         </configuration>
                         <executions>
                             <execution>

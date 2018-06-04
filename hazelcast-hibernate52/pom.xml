@@ -1,0 +1,150 @@
+<!--
+  ~ Copyright (c) 2008-2016, Hazelcast, Inc. All Rights Reserved.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.hazelcast</groupId>
+        <artifactId>hazelcast-hibernate</artifactId>
+        <version>3.8.3-SNAPSHOT</version>
+    </parent>
+    <artifactId>hazelcast-hibernate52</artifactId>
+    <packaging>jar</packaging>
+    <description>Hazelcast In-Memory DataGrid Hibernate Plugin</description>
+    <url>http://www.hazelcast.com/</url>
+
+    <properties>
+        <hibernate.core.version>5.2.5.Final</hibernate.core.version>
+        <jdk.version>1.8</jdk.version>
+        <!-- needed for checkstyle/findbugs -->
+        <main.basedir>${project.parent.basedir}</main.basedir>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>${hibernate.core.version}</version>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>slf4j-api</artifactId>
+                    <groupId>org.slf4j</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <!-- Reuse tests from hibernate5 module -->
+        <testSourceDirectory>../hazelcast-hibernate5/src/test/java</testSourceDirectory>
+        <testResources>
+            <testResource>
+                <directory>../hazelcast-hibernate5/src/test/resources</directory>
+            </testResource>
+        </testResources>
+
+        <!-- Overlay code onto hibernate5 module -->
+        <plugins>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>${maven.resources.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>copy-sources</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/generated-sources</outputDirectory>
+                            <overwrite>false</overwrite>
+                            <resources>
+                                <resource>
+                                    <directory>../hazelcast-hibernate5/src/main/java</directory>
+                                    <excludes>
+                                        <exclude>com/hazelcast/hibernate/region/AbstractGeneralRegion.java</exclude>
+                                        <exclude>com/hazelcast/hibernate/region/CollectionRegionAccessStrategyAdapter.java</exclude>
+                                        <exclude>com/hazelcast/hibernate/region/HazelcastCacheKeysFactory.java</exclude>
+                                        <exclude>com/hazelcast/hibernate/region/NaturalIdRegionAccessStrategyAdapter.java</exclude>
+                                        <exclude>com/hazelcast/hibernate/region/EntityRegionAccessStrategyAdapter.java</exclude>
+                                        <exclude>com/hazelcast/hibernate/serialization/Hibernate5CacheEntrySerializerHook.java</exclude>
+                                        <exclude>com/hazelcast/hibernate/serialization/Hibernate5CacheEntrySerializer.java</exclude>
+                                        <exclude>com/hazelcast/hibernate/serialization/Hibernate51CacheEntrySerializer.java</exclude>
+                                    </excludes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/classes</outputDirectory>
+                            <overwrite>false</overwrite>
+                            <resources>
+                                <resource>
+                                    <directory>../hazelcast-hibernate5/src/main/resources</directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>${build.helper.maven.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${project.build.directory}/generated-sources</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven.surefire.plugin.version}</version>
+                <configuration combine.self="override">
+                    <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                    <runOrder>failedfirst</runOrder>
+                    <argLine>
+                        -Xms128m -Xmx1G -XX:MaxPermSize=128M
+                        -Dhazelcast.phone.home.enabled=false
+                        -Dhazelcast.mancenter.enabled=false
+                        -Dhazelcast.logging.type=none
+                        -Dhazelcast.test.use.network=false
+                    </argLine>
+                    <excludes>
+                        <exclude>**/HibernateSerializationHookAvailableTest.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

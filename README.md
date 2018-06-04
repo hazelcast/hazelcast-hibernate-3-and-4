@@ -25,16 +25,16 @@ Please see our <a href="https://github.com/hazelcast/hazelcast-code-samples/tree
 
 ## Supported Hibernate and Hazelcast Versions
 
-- Hibernate 3.3+
-- Hibernate 4.x
-- Hazelcast 3.6+
+- Hibernate 3.3+ (`hazelcast-hibernate3`- Hazelcast 3.6+)
+- Hibernate 4.x (`hazelcast-hibernate4` - Hazelcast 3.6+)
+- Hibernate 5.0.x/5.1.x (`hazelcast-hibernate5` - Hazelcast 3.7+) 
+- Hibernate 5.2.x (`hazelcast-hibernate52` - Hazelcast 3.7+ and Java 8)
 
 ## Configuring Hibernate for Hazelcast
 
 To configure Hibernate for Hazelcast:
 
-- Add `hazelcast-hibernate3-<`*hazelcastversion*`>.jar` or `hazelcast-
-hibernate4-<`*hazelcastversion*`>.jar` into your classpath depending on your Hibernate version.
+- Add `hazelcast-hibernate<`*3/4/5/52*`>-<`*hazelcastversion*`>.jar` into your classpath depending on your Hibernate version.
 - Then add the following properties into your Hibernate configuration file, e.g., `hibernate.cfg.xml`.
 
 ### Enabling Second Level Cache
