@@ -19,8 +19,10 @@ package com.hazelcast.hibernate.distributed;
 import com.hazelcast.hibernate.serialization.Expirable;
 import com.hazelcast.hibernate.serialization.ExpiryMarker;
 import com.hazelcast.hibernate.serialization.HibernateDataSerializerHook;
+import com.hazelcast.map.EntryProcessor;
 import com.hazelcast.nio.ObjectDataInput;
 import com.hazelcast.nio.ObjectDataOutput;
+import com.hazelcast.nio.serialization.IdentifiedDataSerializable;
 
 import java.io.IOException;
 import java.util.Map;
@@ -29,7 +31,7 @@ import java.util.Map;
  * A concrete implementation of {@link com.hazelcast.map.EntryProcessor} which unlocks
  * a soft-locked region cached entry
  */
-public class UnlockEntryProcessor extends AbstractRegionCacheEntryProcessor {
+public class UnlockEntryProcessor implements EntryProcessor<Object, Expirable, Object>, IdentifiedDataSerializable {
 
     private ExpiryMarker lock;
     private String nextMarkerId;
@@ -45,7 +47,7 @@ public class UnlockEntryProcessor extends AbstractRegionCacheEntryProcessor {
     }
 
     @Override
-    public Void process(Map.Entry<Object, Expirable> entry) {
+    public Object process(Map.Entry<Object, Expirable> entry) {
         Expirable expirable = entry.getValue();
 
         if (expirable != null) {
@@ -56,7 +58,7 @@ public class UnlockEntryProcessor extends AbstractRegionCacheEntryProcessor {
                 // in-flight transactions from adding stale values to the cache
                 expirable = new ExpiryMarker(null, timestamp, nextMarkerId).expire(timestamp);
             } else {
-                // It's a different marker. Leave it alone.
+                // else its a different marker. Leave the it as is
                 return null;
             }
             entry.setValue(expirable);
@@ -80,8 +82,13 @@ public class UnlockEntryProcessor extends AbstractRegionCacheEntryProcessor {
     }
 
     @Override
-    public int getId() {
+    public int getClassId() {
         return HibernateDataSerializerHook.UNLOCK;
     }
 
+    @Override
+    public int getFactoryId() {
+        return HibernateDataSerializerHook.F_ID;
+    }
 }
+
