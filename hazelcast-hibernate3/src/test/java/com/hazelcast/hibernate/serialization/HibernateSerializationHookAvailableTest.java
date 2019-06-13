@@ -23,7 +23,7 @@ import com.hazelcast.instance.HazelcastInstanceProxy;
 import com.hazelcast.internal.serialization.impl.AbstractSerializationService;
 import com.hazelcast.spi.serialization.SerializationService;
 import com.hazelcast.test.HazelcastSerialClassRunner;
-import com.hazelcast.test.annotation.ParallelTest;
+import com.hazelcast.test.annotation.ParallelJVMTest;
 import com.hazelcast.test.annotation.QuickTest;
 import org.hibernate.cache.CacheKey;
 import org.hibernate.cache.entry.CacheEntry;
@@ -38,7 +38,7 @@ import java.util.concurrent.ConcurrentMap;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(HazelcastSerialClassRunner.class)
-@Category({QuickTest.class, ParallelTest.class})
+@Category({QuickTest.class, ParallelJVMTest.class})
 public class HibernateSerializationHookAvailableTest {
 
     private static final Field ORIGINAL;
