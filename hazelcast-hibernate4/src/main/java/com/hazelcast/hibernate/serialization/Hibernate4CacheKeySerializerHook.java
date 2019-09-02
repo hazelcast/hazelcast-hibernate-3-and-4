@@ -17,7 +17,7 @@
 package com.hazelcast.hibernate.serialization;
 
 import com.hazelcast.logging.Logger;
-import com.hazelcast.nio.UnsafeHelper;
+import com.hazelcast.internal.memory.impl.UnsafeUtil;
 import com.hazelcast.nio.serialization.Serializer;
 import com.hazelcast.nio.serialization.SerializerHook;
 
@@ -34,7 +34,7 @@ public class Hibernate4CacheKeySerializerHook
 
     public Hibernate4CacheKeySerializerHook() {
         Class<?> cacheKeyClass = null;
-        if (UnsafeHelper.UNSAFE_AVAILABLE) {
+        if (UnsafeUtil.UNSAFE_AVAILABLE) {
             try {
                 cacheKeyClass = Class.forName("org.hibernate.cache.spi.CacheKey");
             } catch (Exception e) {
