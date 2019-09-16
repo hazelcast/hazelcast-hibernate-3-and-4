@@ -16,8 +16,8 @@
 
 package com.hazelcast.hibernate;
 
-import com.hazelcast.core.EntryView;
-import com.hazelcast.map.merge.MapMergePolicy;
+import com.hazelcast.spi.merge.MergingValue;
+import com.hazelcast.spi.merge.SplitBrainMergePolicy;
 import com.hazelcast.nio.ObjectDataInput;
 import com.hazelcast.nio.ObjectDataOutput;
 import org.hibernate.cache.spi.entry.CacheEntry;
@@ -25,23 +25,22 @@ import org.hibernate.cache.spi.entry.CacheEntry;
 import java.io.IOException;
 
 /**
- *  A merge policy implementation to handle split brain remerges based on the timestamps stored in
- *  the values.
+ * A merge policy implementation to handle split brain remerges based on the timestamps stored in
+ * the values.
  */
-public class VersionAwareMapMergePolicy implements MapMergePolicy {
+public class VersionAwareMapMergePolicy implements SplitBrainMergePolicy<Object, MergingValue<Object>> {
 
-    public Object merge(String mapName, EntryView mergingEntry, EntryView existingEntry) {
-        final Object existingValue = existingEntry != null ? existingEntry.getValue() : null;
-        final Object mergingValue = mergingEntry.getValue();
-        if (existingValue != null && existingValue instanceof CacheEntry
-                && mergingValue != null && mergingValue instanceof CacheEntry) {
+    @Override
+    public Object merge(MergingValue<Object> mergingVal, MergingValue<Object> existingVal) {
+        final Object existingValue = existingVal != null ? existingVal.getValue() : null;
+        final Object mergingValue = mergingVal != null ? mergingVal.getValue() : null;
+        if (existingValue instanceof CacheEntry && mergingValue instanceof CacheEntry) {
 
             final CacheEntry existingCacheEntry = (CacheEntry) existingValue;
             final CacheEntry mergingCacheEntry = (CacheEntry) mergingValue;
             final Object mergingVersionObject = mergingCacheEntry.getVersion();
             final Object existingVersionObject = existingCacheEntry.getVersion();
-            if (mergingVersionObject != null && existingVersionObject != null
-                    && mergingVersionObject instanceof Comparable && existingVersionObject instanceof Comparable) {
+            if (mergingVersionObject instanceof Comparable && existingVersionObject instanceof Comparable) {
 
                 final Comparable mergingVersion = (Comparable) mergingVersionObject;
                 final Comparable existingVersion = (Comparable) existingVersionObject;

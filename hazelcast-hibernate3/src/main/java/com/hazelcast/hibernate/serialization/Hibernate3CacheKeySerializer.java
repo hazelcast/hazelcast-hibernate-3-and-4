@@ -18,7 +18,7 @@ package com.hazelcast.hibernate.serialization;
 
 import com.hazelcast.nio.ObjectDataInput;
 import com.hazelcast.nio.ObjectDataOutput;
-import com.hazelcast.nio.UnsafeHelper;
+import com.hazelcast.internal.memory.impl.UnsafeUtil;
 import com.hazelcast.internal.serialization.impl.SerializationConstants;
 import com.hazelcast.nio.serialization.StreamSerializer;
 import org.hibernate.EntityMode;
@@ -35,7 +35,7 @@ import java.lang.reflect.Field;
 class Hibernate3CacheKeySerializer
         implements StreamSerializer<CacheKey> {
 
-    private static final Unsafe UNSAFE = UnsafeHelper.UNSAFE;
+    private static final Unsafe UNSAFE = UnsafeUtil.UNSAFE;
 
     private static final long KEY_OFFSET;
     private static final long TYPE_OFFSET;
