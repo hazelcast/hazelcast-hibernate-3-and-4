@@ -18,7 +18,7 @@ package com.hazelcast.hibernate.serialization;
 
 import com.hazelcast.test.HazelcastSerialClassRunner;
 import com.hazelcast.test.annotation.QuickTest;
-import com.hazelcast.util.FilteringClassLoader;
+import com.hazelcast.internal.util.FilteringClassLoader;
 import org.hibernate.cache.CacheKey;
 import org.hibernate.cache.entry.CacheEntry;
 import org.junit.Test;
