@@ -53,7 +53,7 @@ public final class CacheEnvironment {
     /**
      * Property to configure Hazelcast client group name
      */
-    public static final String NATIVE_CLIENT_GROUP = "hibernate.cache.hazelcast.native_client_group";
+    public static final String NATIVE_CLIENT_CLUSTER = "hibernate.cache.hazelcast.native_client_group";
 
     /**
      * Property to configure Hazelcast client group password
