@@ -165,21 +165,11 @@ You can set up Hazelcast to connect to the cluster as Native Client. Native clie
 
 To set up Native Client, add the Hazelcast **group-name**, **group-password** and **cluster member address** properties. Native Client will connect to the defined member and will get the addresses of all members in the cluster. If the connected member dies or leaves the cluster, the client will automatically switch to another member in the cluster.
 
-(_Hazelcast 3.6+_)
 ```xml  
 <property name="hibernate.cache.hazelcast.native_client_address">10.34.22.15</property>
 <property name="hibernate.cache.hazelcast.native_client_group">dev</property>
 <property name="hibernate.cache.hazelcast.native_client_password">dev-pass</property>
 ```
-
-![image](images/NoteSmall.jpg) ***NOTE***: With Hazelcast 4.0 **group-password** is deprecated. Use **SecurityConfig** insted.
-
-(_Hazelcast 4.0+_)
-```xml 
-<property name="hibernate.cache.hazelcast.native_client_address">10.34.22.15</property>
-<property name="hibernate.cache.hazelcast.native_client_group">dev</property>
-```
-
 
 You can use an existing client instead of creating a new one by adding the following property.
 
