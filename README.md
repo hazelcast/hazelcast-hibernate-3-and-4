@@ -175,7 +175,7 @@ _For Hazelcast version 3.x (3.6+):_
 _For Hazelcast version 4.x:_
 ```xml  
 <property name="hibernate.cache.hazelcast.native_client_address">10.34.22.15</property>
-<property name="hibernate.cache.hazelcast.native_client_cluster">dev</property>
+<property name="hibernate.cache.hazelcast.native_client_cluster_name">dev</property>
 ```
 
 You can use an existing client instead of creating a new one by adding the following property.

@@ -50,7 +50,7 @@ class HazelcastClientLoader implements IHazelcastInstanceLoader {
         }
 
         String address = PropertiesHelper.getString(CacheEnvironment.NATIVE_CLIENT_ADDRESS, props, null);
-        String clientClusterName = PropertiesHelper.getString(CacheEnvironment.NATIVE_CLIENT_CLUSTER, props, null);
+        String clientClusterName = PropertiesHelper.getString(CacheEnvironment.NATIVE_CLIENT_CLUSTER_NAME, props, null);
         String configResourcePath = CacheEnvironment.getConfigFilePath(props);
 
         if (configResourcePath != null) {
