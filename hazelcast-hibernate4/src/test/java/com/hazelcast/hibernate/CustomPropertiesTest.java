@@ -67,8 +67,7 @@ public class CustomPropertiesTest extends HibernateTestSupport {
         props.remove(CacheEnvironment.CONFIG_FILE_PATH_LEGACY);
         props.setProperty(Environment.CACHE_REGION_FACTORY, HazelcastCacheRegionFactory.class.getName());
         props.setProperty(CacheEnvironment.USE_NATIVE_CLIENT, "true");
-        props.setProperty(CacheEnvironment.NATIVE_CLIENT_CLUSTER, "dev-custom");
-        props.setProperty(CacheEnvironment.NATIVE_CLIENT_PASSWORD, "dev-pass");
+        props.setProperty(CacheEnvironment.NATIVE_CLIENT_CLUSTER_NAME, "dev-custom");
         props.setProperty(CacheEnvironment.NATIVE_CLIENT_ADDRESS, "localhost");
         props.setProperty(CacheEnvironment.CONFIG_FILE_PATH,"hazelcast-client-custom.xml");
         HazelcastMockInstanceLoader loader = new HazelcastMockInstanceLoader();
@@ -81,7 +80,6 @@ public class CustomPropertiesTest extends HibernateTestSupport {
         HazelcastClientProxy client = (HazelcastClientProxy) hz;
         ClientConfig clientConfig = client.getClientConfig();
         assertEquals("dev-custom", clientConfig.getClusterName());
-        assertEquals("dev-pass", clientConfig.getClusterPassword());
         assertTrue(clientConfig.getNetworkConfig().isSmartRouting());
         assertTrue(clientConfig.getNetworkConfig().isRedoOperation());
         factory.newHazelcastInstance(config);
